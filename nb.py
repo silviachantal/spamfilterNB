@@ -1,5 +1,4 @@
 from collections import defaultdict
-
 from matplotlib.pyplot import cla
 from corpus import *
 from typing import *
