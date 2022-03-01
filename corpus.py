@@ -28,6 +28,7 @@ def tokenize(text):
     useful_tok_es = [w for w in useful_tok_en if w not in stop_words_es]
     useful_tok_de = [w for w in useful_tok_es if w not in stop_words_de]
     useful_tok = [w for w in useful_tok_de if len(w) >= 3]
+    
     vocab = sorted(set(useful_tok))
     return vocab
     #text cleaning: stopwords with nltk (+ adding and removign)? I just want to remove articles and pronouns? or scikitlearn?
