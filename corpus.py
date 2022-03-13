@@ -17,12 +17,12 @@ from typing import *
 # instead of using the os library
 from pathlib import Path
 
-
+# for tokenizing I set ignoretiny to false because with true the recall performance was lower
 def tokenize(text, ignoretiny=False):
     pattern = r"(?:[A-Z]\.)+|\w+(?:-\w+)*"
     onlyalphanum_tok = nltk.regexp_tokenize(text, pattern)[
         1:
-    ]  # to always avoid "Subject"
+    ]  # to always avoid "Subject:"
 
     lowercase_tok = [w.lower() for w in onlyalphanum_tok]
     useful_tok = [w for w in lowercase_tok if w not in stop_words]
@@ -31,11 +31,8 @@ def tokenize(text, ignoretiny=False):
     # optional tiny words
     if ignoretiny:
         useful_tok = [w for w in useful_tok if len(w) >= 3]
-
     vocab = sorted(set(useful_tok))
     return vocab
-    # text cleaning: stopwords with nltk (+ adding and removing)? I just want to remove articles and pronouns? or scikitlearn?
-    # naive bayes is naive because it treats words unrelationally like a vocab
 
 
 # this functions accesses the content of each email and divides it into tokens
@@ -57,8 +54,9 @@ def read_dataset(path):
     spam_dir = dataset_location.joinpath("spam")
 
     trainset = []
-
+    # I retrieve the files inside the two directories by checking that their path ends with txt extension
     for hamfile in ham_dir.glob("*.txt"):
+        # I read the content of each file and append it with its label for later training
         ham_comb = read_file(hamfile)
         trainset.append((ham_comb, "ham"))
 
