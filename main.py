@@ -1,10 +1,7 @@
-#the hitchikers guide to pyhton 
 #https://python-docs.readthedocs.io/en/latest/writing/structure.html
 #chapter 4: strcturing your code(p65)
-
 #this module "main.py" is the abstraction layer of the project that handles interfacing with user actions
 #i will hence import my project's internal modules
-
 #command-line application 
 #i will use argparse library because it is in the Python's standard library
 
@@ -14,8 +11,7 @@ import nb
 from nb import SpamFilter
 from collections import Counter
 from pathlib import Path
-
-      
+ 
 def create_parser():
     parser = argparse.ArgumentParser(description="filters email contents dividing them into two categories: ham or spam") #the parser will hold all the information necessary to parse the command-line into python datatypes
     parser.add_argument('-tr', '--train_dataset', metavar='dataset path', required='True', type=str, help='enter a path to a dataset of emails on which the filter will be trained') #we define which arguments the program will require: we tell how to take strings in CLI and turn them into objects
@@ -34,7 +30,7 @@ def main():
     spam_filter.train(read_train)
     precis_rec= Counter({"TP": 0, "FN": 0, "FP": 0, "TN": 0})
 
-#I iterate over the content of the mail in the test dataset and classify them
+    #I iterate over the content of the mail in the test dataset and classify them
     for mail, label in read_test:
         score, prediction = spam_filter.classify(mail)
         #I calculate how many true positive, false negative, false positive and true negative predictions  
@@ -52,14 +48,11 @@ def main():
                 precis_rec["FP"] += 1
     
 #I calculate precision and recall with formulas, not scikit learn
-#For precision the formula is TP/(TP+FP)
-#For recall the formula is TP/(TP+FN)
-
+#For precision the formula is TP/(TP+FP), for recall the formula is TP/(TP+FN)
     precision = precis_rec['TP'] / (precis_rec['TP'] + precis_rec['FP'])
     recall = precis_rec['TP'] / (precis_rec['TP'] + precis_rec['FN'])
     print(f'{precision=} {recall=}')
 
-    
     dataset_location = Path(argums.diremails_classify)
     assert dataset_location.is_dir()
 #opening a file for writing the classification results
