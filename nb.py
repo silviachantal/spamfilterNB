@@ -51,3 +51,4 @@ class SpamFilter:
             return ("{:.3f}".format(spam_email_score)), "spam"
         else:
             return ("{:.3f}".format(ham_email_score)), "ham"
+            

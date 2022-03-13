@@ -12,6 +12,8 @@ import argparse
 import corpus 
 import nb
 from nb import SpamFilter
+from collections import Counter
+from pathlib import Path
 
       
 def create_parser():
@@ -27,29 +29,47 @@ def main():
     argums = create_parser() 
     read_train = corpus.read_dataset(argums.train_dataset)
     read_test = corpus.read_dataset(argums.test_dataset)
-    #for the user emails I iterate over their content and read it with read_file method 
-    read_usermails = corpus.read_file(argums.diremails_classify)
+   
     spam_filter = SpamFilter()
     spam_filter.train(read_train)
+    precis_rec= Counter({"TP": 0, "FN": 0, "FP": 0, "TN": 0})
 
-#i iterate over the content of the mail in the test dataset and classify them
+#I iterate over the content of the mail in the test dataset and classify them
     for mail, label in read_test:
-        result = spam_filter.classify(mail)
-        #I apply precision and recall 
+        score, prediction = spam_filter.classify(mail)
+        #I calculate how many true positive, false negative, false positive and true negative predictions  
+        #I increase the counter of the true predictions
+        if label == prediction:
+            if label == "spam":
+                precis_rec["TN"] += 1
+            elif label == "ham": 
+                precis_rec["TP"] += 1
+        #I increase the counter of the false predictions        
+        else:
+            if label == "spam":
+                precis_rec["FN"] += 1
+            elif label == "ham":
+                precis_rec["FP"] += 1
+    
+#I calculate precision and recall with formulas, not scikit learn
+#For precision the formula is TP/(TP+FP)
+#For recall the formula is TP/(TP+FN)
 
+    precision = precis_rec['TP'] / (precis_rec['TP'] + precis_rec['FP'])
+    recall = precis_rec['TP'] / (precis_rec['TP'] + precis_rec['FN'])
+    print(f'{precision=} {recall=}')
 
-
-
-
-
+    
+    dataset_location = Path(argums.diremails_classify)
+    assert dataset_location.is_dir()
 #opening a file for writing the classification results
-#do I have to require as a condition that it is a txt file?
-    with open(argums.resultfile, "w") as final_file: 
-        for mail, label in read_usermails:
-            result = spam_filter.classify(mail)
-            final_file.write(result, label)
-            #do I want to write accuracy?
-
+    with open(argums.resultfile, "w") as final_file:
+#for the user emails I iterate over their content and read it with read_file method  
+        for mailtoclass in dataset_location:
+            read_mail = corpus.read_file(mailtoclass)
+            scoremail, label = spam_filter.classify(read_mail)
+            final_file.write(mailtoclass, scoremail, label)
+            
  
 if __name__ == "__main__":
     main()
