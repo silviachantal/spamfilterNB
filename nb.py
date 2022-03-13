@@ -35,15 +35,13 @@ class SpamFilter:
     def classify(self, email):
         spam_email_score = 0
         ham_email_score = 0
+        total_spam_count = sum(self.spam_word_count.values())
+        total_ham_count = sum(self.ham_word_count.values())
 
         for word in email:
-            word_spam_score = self.spam_word_count[word] / (
-                sum(self.spam_word_count.values())
-            )
+            word_spam_score = self.spam_word_count[word] / (total_spam_count)
             spam_email_score += math.log(word_spam_score)
-            word_ham_score = self.ham_word_count[word] / (
-                sum(self.ham_word_count.values())
-            )
+            word_ham_score = self.ham_word_count[word] / (total_ham_count)
             ham_email_score += math.log(word_ham_score)
 
         spam_email_score += math.log(self.spam_prob)

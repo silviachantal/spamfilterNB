@@ -4,7 +4,7 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.stem import PorterStemmer
 
-# I use nltk because it has less than other libr, I don't want to lose 2 much info
+# I use nltk because it considers less words than other libraries
 from nltk.corpus import stopwords
 
 stop_words = set(stopwords.words("english"))
@@ -17,8 +17,6 @@ from typing import *
 # instead of using the os library
 from pathlib import Path
 
-# browsing the natural language toolkit's available packages. This consists of 30 compressed files, requiring about 100Mb disk space. Downloaded to my machine.
-
 
 def tokenize(text, ignoretiny=False):
     pattern = r"(?:[A-Z]\.)+|\w+(?:-\w+)*"
@@ -27,9 +25,7 @@ def tokenize(text, ignoretiny=False):
     ]  # to always avoid "Subject"
 
     lowercase_tok = [w.lower() for w in onlyalphanum_tok]
-    useful_tok = [
-        w for w in lowercase_tok if w not in stop_words
-    ]  # TODO:i try keeping all default stopwords
+    useful_tok = [w for w in lowercase_tok if w not in stop_words]
     useful_tok = [w for w in useful_tok if w not in stop_words_es]
     useful_tok = [w for w in useful_tok if w not in stop_words_de]
     # optional tiny words

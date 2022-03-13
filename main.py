@@ -51,16 +51,19 @@ def parse_args():
 
 def main():
     argums = parse_args()
+    print("I am reading the datasets")
     read_train = corpus.read_dataset(argums.train_dataset)
     read_test = corpus.read_dataset(argums.test_dataset)
 
     # I create an instance of the class SpamFilter and apply the train method
     spam_filter = SpamFilter()
+    print("I will now train the Spam Filter")
     spam_filter.train(read_train)
     # I create a counter with keys for later Precision and Recall of the spamfilter
     precis_rec = Counter({"TP": 0, "FN": 0, "FP": 0, "TN": 0})
 
     # I iterate over the content of the mail in the test dataset and classify them
+    print("I will now start validating")
     for mail, label in read_test:
         score, prediction = spam_filter.classify(mail)
         # I calculate how many true positive, false negative, false positive, true negative predictions
@@ -87,6 +90,7 @@ def main():
     assert dataset_location.is_dir()
     # opening a file for writing the classification results
     with open(argums.resultfile, "w") as final_file:
+        print(f"I am storing the classified emails in the {argums.resultfile}")
         # for the user emails I iterate over their content and read it with read_file method
         for mailtoclass in dataset_location.glob("*.txt"):
             read_mail = corpus.read_file(mailtoclass)
