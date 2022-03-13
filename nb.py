@@ -1,6 +1,6 @@
 from collections import defaultdict
 from matplotlib.pyplot import cla
-from corpus import * #page 68 "this is considered bad practice"
+from corpus import * 
 from typing import *
 import math
 
