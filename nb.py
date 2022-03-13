@@ -51,11 +51,3 @@ class SpamFilter:
             return ("{:.3f}".format(spam_email_score)), "spam"
         else:
             return ("{:.3f}".format(ham_email_score)), "ham"
-
-#myspamfil = SpamFilter()
-#example = read_dataset("data/data/train")
-#myspamfil.train(example)
-#test_data = read_dataset("data/data/test")
-#for mail,lab in test_data:
-    #res = myspamfil.classify(mail)
-    #print(res, lab)

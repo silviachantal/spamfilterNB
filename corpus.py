@@ -1,6 +1,4 @@
 # I import the libraries I will need for tokenizing and cleaning our data
-#from sklearn.feature_extraction.text import CountVectorizer
-from asyncore import read
 from collections import Counter
 import numpy as np
 import nltk
@@ -20,14 +18,16 @@ from pathlib import Path
 
 
 
-def tokenize(text):
+def tokenize(text, ignoretiny = True, avoidrepet = True):
     pattern = r'(?:[A-Z]\.)+|\w+(?:-\w+)*'
     onlyalphanum_tok = nltk.regexp_tokenize(text, pattern)[1:] #to always avoid "Subject"
+
     lowercase_tok = [w.lower() for w in onlyalphanum_tok]
-    useful_tok_en = [w for w in lowercase_tok if w not in stop_words] #TODO:i try keeping all default stopwords
-    useful_tok_es = [w for w in useful_tok_en if w not in stop_words_es]
-    useful_tok_de = [w for w in useful_tok_es if w not in stop_words_de]
-    useful_tok = [w for w in useful_tok_de if len(w) >= 3]
+    useful_tok = [w for w in lowercase_tok if w not in stop_words] #TODO:i try keeping all default stopwords
+    useful_tok = [w for w in useful_tok if w not in stop_words_es]
+    useful_tok = [w for w in useful_tok if w not in stop_words_de]
+    if ignoretiny:
+        useful_tok = [w for w in useful_tok if len(w) >= 3] #optional tiny words
     
     vocab = sorted(set(useful_tok))
     return vocab
@@ -61,6 +61,3 @@ def read_dataset(path):
         trainset.append((spam_comb, "spam"))
 
     return trainset
-
-myexamp = read_dataset("data/data/train")
-print(myexamp)
