@@ -26,14 +26,16 @@ def main():
     read_train = corpus.read_dataset(argums.train_dataset)
     read_test = corpus.read_dataset(argums.test_dataset)
    
+    #I create an instance of the class SpamFilter and apply the train method
     spam_filter = SpamFilter()
     spam_filter.train(read_train)
+    #I create a counter with keys for later Precision and Recall of the spamfilter
     precis_rec= Counter({"TP": 0, "FN": 0, "FP": 0, "TN": 0})
 
     #I iterate over the content of the mail in the test dataset and classify them
     for mail, label in read_test:
         score, prediction = spam_filter.classify(mail)
-        #I calculate how many true positive, false negative, false positive and true negative predictions  
+        #I calculate how many true positive, false negative, false positive, true negative predictions  
         #I increase the counter of the true predictions
         if label == prediction:
             if label == "spam":
@@ -47,17 +49,17 @@ def main():
             elif label == "ham":
                 precis_rec["FP"] += 1
     
-#I calculate precision and recall with formulas, not scikit learn
-#For precision the formula is TP/(TP+FP), for recall the formula is TP/(TP+FN)
+    #I calculate precision and recall with formulas, not scikit learn
+    #For precision the formula is TP/(TP+FP), for recall the formula is TP/(TP+FN)
     precision = precis_rec['TP'] / (precis_rec['TP'] + precis_rec['FP'])
     recall = precis_rec['TP'] / (precis_rec['TP'] + precis_rec['FN'])
     print(f'{precision=} {recall=}')
 
     dataset_location = Path(argums.diremails_classify)
     assert dataset_location.is_dir()
-#opening a file for writing the classification results
+    #opening a file for writing the classification results
     with open(argums.resultfile, "w") as final_file:
-#for the user emails I iterate over their content and read it with read_file method  
+    #for the user emails I iterate over their content and read it with read_file method  
         for mailtoclass in dataset_location:
             read_mail = corpus.read_file(mailtoclass)
             scoremail, label = spam_filter.classify(read_mail)

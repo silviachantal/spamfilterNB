@@ -12,7 +12,8 @@ stop_words_de = set(stopwords.words('german'))
 #from nltk.tokenize import word_tokenize 
 import re
 from typing import *
-from pathlib import Path #instead of using the os library
+#instead of using the os library
+from pathlib import Path 
 #browsing the natural language toolkit's available packages. This consists of 30 compressed files, requiring about 100Mb disk space. Downloaded to my machine.
 
 def tokenize(text, ignoretiny = True, avoidrepet = True):
@@ -23,8 +24,9 @@ def tokenize(text, ignoretiny = True, avoidrepet = True):
     useful_tok = [w for w in lowercase_tok if w not in stop_words] #TODO:i try keeping all default stopwords
     useful_tok = [w for w in useful_tok if w not in stop_words_es]
     useful_tok = [w for w in useful_tok if w not in stop_words_de]
+    #optional tiny words
     if ignoretiny:
-        useful_tok = [w for w in useful_tok if len(w) >= 3] #optional tiny words
+        useful_tok = [w for w in useful_tok if len(w) >= 3] 
 
     vocab = sorted(set(useful_tok))
     return vocab
