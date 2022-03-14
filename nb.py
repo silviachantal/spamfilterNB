@@ -19,7 +19,7 @@ class SpamFilter:
         spam_mails = []
         ham_mails = []
 
-        # I iterate over each email and append them in the corresponding spam or ham list
+        # I iterate over each email and append its content in the corresponding spam or ham list
         for (words, label) in emails:
             if label == "spam":
                 spam_mails.append(words)
@@ -53,6 +53,7 @@ class SpamFilter:
         # Log(0) is undefined and woult throw an error: I set 1 as default value in defaultdict as mentioned above(Laplace Smooting)
         for word in email:
             word_spam_score = self.spam_word_count[word] / (total_spam_count)
+            # Here I compute the overall probability by summing all single words' probabilities
             spam_email_score += math.log(word_spam_score)
             word_ham_score = self.ham_word_count[word] / (total_ham_count)
             ham_email_score += math.log(word_ham_score)
@@ -60,7 +61,7 @@ class SpamFilter:
         spam_email_score += math.log(self.spam_prob)
         ham_email_score += math.log(self.ham_prob)
 
-        # I compare the two scores
+        # I compare the two scores and use formatting for returning only three decimals
         if spam_email_score > ham_email_score:
             return ("{:.3f}".format(spam_email_score)), "spam"
         else:
