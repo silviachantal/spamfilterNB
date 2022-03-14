@@ -17,8 +17,9 @@ from typing import *
 # instead of using the os library
 from pathlib import Path
 
-# for tokenizing I set ignoretiny to false because with true the recall performance was lower
-def tokenize(text, ignoretiny=False):
+
+# eventually the optional arguments could be integrated in the argparse interface for the user to choose if he/she wants them on or not
+def tokenize(text, ignoretiny=False, numbers_digit=False):
     pattern = r"(?:[A-Z]\.)+|\w+(?:-\w+)*"
     onlyalphanum_tok = nltk.regexp_tokenize(text, pattern)[
         1:
@@ -28,9 +29,18 @@ def tokenize(text, ignoretiny=False):
     useful_tok = [w for w in lowercase_tok if w not in stop_words]
     useful_tok = [w for w in useful_tok if w not in stop_words_es]
     useful_tok = [w for w in useful_tok if w not in stop_words_de]
-    # optional tiny words
+    # optional tiny words. Update: for tokenizing I set ignoretiny to false because with true the recall performance was lower
     if ignoretiny:
         useful_tok = [w for w in useful_tok if len(w) >= 3]
+    # I create two classes: one with small numbers and one with large numbers. Update: I set it to false because the recall performance decreases.
+    if numbers_digit:
+        useful_tok = [
+            ("smallnumber" if re.fullmatch(r"(\d{1,5})", w) else w) for w in useful_tok
+        ]
+        useful_tok = [
+            ("bignumber" if re.fullmatch(r"(\d{6,})", w) else w) for w in useful_tok
+        ]
+
     vocab = sorted(set(useful_tok))
     return vocab
 
